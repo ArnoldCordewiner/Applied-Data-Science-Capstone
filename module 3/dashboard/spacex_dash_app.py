@@ -50,10 +50,12 @@ app.layout = html.Div(children=[html.H1('SpaceX Launch Records Dashboard',
 )
 def generate_success_pie_chart(site):
     if site == 'ALL':
-        fig = px.pie(spacex_df, names='class', title='Total Success Launches by Class')
+        fig = px.pie(spacex_df, names='class', color = 'class', color_discrete_map={1: 'green', 0: 'red'}, 
+        title='Total Success Launches by Class')
     else:
         site_df = spacex_df[spacex_df['Launch Site'] == site]
-        fig = px.pie(site_df, names='class', title=f'Success Launches for {site} Site')
+        fig = px.pie(site_df, names='class', color = 'class', color_discrete_map={1: 'green', 0: 'red'}, 
+        title='Total Success Launches by Class')
     return fig
 
 # TASK 4:
@@ -69,7 +71,10 @@ def generate_success_payload_scatter_chart(site, payload_range):
         site_df = spacex_df[spacex_df['Launch Site'] == site]
 
     filtered_df = site_df[(site_df['Payload Mass (kg)'] >= payload_range[0]) & (site_df['Payload Mass (kg)'] <= payload_range[1])]
-    fig = px.scatter(filtered_df, x='Payload Mass (kg)', y='class', color='Booster Version Category', title='Correlation between Payload and Launch Success')
+    fig = px.scatter(filtered_df, x='Payload Mass (kg)', y='class', color='Booster Version Category', 
+                        title='Correlation between Payload and Launch Success', 
+                        category_orders={'class': ['0', '1']})
+    fig.update_layout(yaxis=dict(tickvals=[0, 1], ticktext=['Failure', 'Success']))
     return fig
 
 # Run the app
